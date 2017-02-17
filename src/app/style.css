@@ -1,0 +1,38 @@
+.title-text {
+    color: tomato;
+    font-size: 35px;
+}
+.search-box-container {
+    text-align: center;
+}
+.search-box {
+    width: 60%;
+    margin-right: 1%;
+}
+.search-explain {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 20px;
+}
+.search-result-container {
+    height: 100%;
+    width: 100%;
+}
+.search-result {
+    margin-top: 20px;
+}
+.fill-height {
+    height: 100%;
+}
+.poster {
+    margin-left: 10%;
+    height: 200px;
+    width: 200px;
+    float: left;
+}
+.search-result-desc {
+    /*float: right;*/
+}
+.desc {
+    padding-bottom: 5px;
+}
