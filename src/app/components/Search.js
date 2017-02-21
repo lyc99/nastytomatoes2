@@ -5,12 +5,11 @@ export class Search extends React.Component {
         super();
         this.state = {
             movieName: props.movieName,
-
         };
     }
 
-    onChangeMovieName() {
-        this.props.changeMovieName(this.state.movieName);
+    onSearchMovieName() {
+        this.props.searchMovieName(this.state.movieName);
     }
 
     onHandleChange(event) {
@@ -20,13 +19,12 @@ export class Search extends React.Component {
     }
 
     render() {
-        console.log(this.props);
         return (
             <div>
                 <p>{this.props.name}</p>
                 <input type="text" className="search-box" value={this.state.movieName}
                        onChange={(event) => this.onHandleChange(event)} />
-                <button onClick={this.onChangeMovieName.bind(this)} className="btn btn-primary">Search</button>
+                <button onClick={this.onSearchMovieName.bind(this)} className="btn btn-primary search-button">Search</button>
             </div>
         );
     }

@@ -23,6 +23,7 @@
   "homepage": "https://github.com/lyc99/nastytomatoes2#readme",
   "dependencies": {
     "imdb-api": "^2.2.1",
+    "lodash": "^4.17.4",
     "react": "^15.4.2",
     "react-dom": "^15.4.2"
   },
