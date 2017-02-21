@@ -103,16 +103,16 @@ class App extends React.Component {
             </div>;
         }
         //modal
-        let modalWindow = "";
-        if(this.state.openModal) {
-            console.log("open?");
-            modalWindow = <div>
-                <UpdateModal
-                    openModal={this.state.openModal}
-                    selectedMovie={this.state.selectedMovie}
-                />
-            </div>
-        }
+        // let modalWindow = "";
+        // if(this.state.openModal) {
+        //     console.log("open?");
+        //     modalWindow = <div id="modal-window">
+        //         <UpdateModal
+        //             openModal={this.state.openModal}
+        //             selectedMovie={this.state.selectedMovie}
+        //         />
+        //     </div>
+        // }
 
         return (
             <div className="container">
@@ -134,7 +134,7 @@ class App extends React.Component {
                 </div>
                 <hr />
                 <div>
-                    {modalWindow}
+                    {/*{modalWindow}*/}
                     <CollectionSearch
                         movieName={this.state.movieName}
                         movieCollection={this.state.movieList}
