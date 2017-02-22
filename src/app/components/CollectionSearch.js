@@ -13,7 +13,6 @@ export class CollectionSearch extends React.Component {
         });
     }
     onSearchCollection() {
-        console.log("onSearch", this.state.searchString);
         this.props.searchCollection(this.state.searchString);
     }
     onClearSearch() {

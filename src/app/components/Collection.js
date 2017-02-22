@@ -11,9 +11,9 @@ export class Collection extends React.Component {
 
     render() {
         //collection
-        const collection = this.props.movieCollection.map((movie, index) => {
+        const collection = this.props.movieCollection.map((movie) => {
             return (
-                <li key={index} className="movie-list">
+                <li key={movie.imdbid} className="movie-list">
                     <div className="row">
                         <div className="col-md-5">
                             <img className="poster-big" src={movie.poster} />
