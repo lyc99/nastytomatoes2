@@ -3,13 +3,11 @@ import { UpdateModal } from "./UpdateModal";
 
 export class Collection extends React.Component {
     onDeleteMovie(event) {
-        console.log("delete", event.target.id);
+        console.log("onDelete?", event.target.id);
         this.props.deleteMovie(event.target.id);
     }
-    onUpdateMovie(id) {
-        console.log("onUpdateMovie Collection.js");
-        // this.props.updateMovie(event.target.id);
-        this.props.updateMovie(id);
+    onUpdateMovie(data) {
+        this.props.updateMovie(data);
     }
 
     render() {
@@ -32,7 +30,6 @@ export class Collection extends React.Component {
                             {/*<button onClick={this.onUpdateMovie.bind(this)} className="btn btn-primary" id={movie.imdbid}>Update</button>*/}
                             <UpdateModal
                                 updateMovie={this.onUpdateMovie.bind(this)}
-                                movieId={movie.imdbid}
                                 movieInfo={movie}
                             />
                         </div>

@@ -1,13 +1,10 @@
 import React from "react";
 import { render } from "react-dom";
 
-import { Header } from "./components/Header";
-import { Home } from "./components/Home";
 import { Search } from "./components/Search";
 import { Result } from "./components/Result";
 import { Collection } from "./components/Collection";
 import { CollectionSearch } from "./components/CollectionSearch";
-import { UpdateModal } from "./components/UpdateModal";
 
 const imdb = require('imdb-api');
 var _ = require('lodash');
@@ -19,8 +16,8 @@ class App extends React.Component {
             movieObject: null,
             movieName: "",
             movieList: [],
-            openModal: false,
-            selectedMovie: null
+            movieSearchResult: [],
+            searchString: "",
         };
     }
 
@@ -41,25 +38,51 @@ class App extends React.Component {
         });
     }
 
-    onSearchCollection(newName) {
-        let movie = null;
-        console.log("onSearchCollection!!");
+    onSearchCollection(searchString) {
+        this.setState({searchString: searchString});
+        var collection = this.state.movieList.slice(0);
+        //filter
+        _.forEach(collection, function(movie) {
+            for(var key in movie) {
+                var foundString = false;
+                if(key == 'title' || key == 'year' || key == 'rated' || key == 'genres' || key == 'director' || key == 'actors' || key == 'plot') {
+                    if(String(movie[key]).indexOf(searchString) > -1) {
+                        foundString = true;
+                        break;
+                    }
+                }
+            }
+            if(!foundString) {
+                _.remove(collection, function(m) {
+                    if(movie) {
+                        return m.imdbid == movie.imdbid;
+                    }
+                });
+            }
+        });
+        this.setState({
+           movieSearchResult: collection
+        });
     }
 
     onClearSearch() {
+        this.setState({searchString: ""});
         console.log("onClearSearch!!");
     }
 
     onSaveMovie(movie) {
         var collection = this.state.movieList.slice(0);
-        collection.push(movie);
-        console.log("onSaveMovie in index.js", movie);
+        if(!_.find(collection, function(m) {return m.imdbid == movie.imdbid;})) {
+            collection.push(movie);
+        }
         this.setState({
-           movieList: collection
+            movieList: collection,
+            searchString: "",
         });
     }
 
     onDeleteMovie(id) {
+        console.log("real delete", id);
         var collection = this.state.movieList.slice(0);
         _.remove(collection, function(movie) {
             return movie.imdbid == id;
@@ -69,18 +92,70 @@ class App extends React.Component {
         });
     }
 
-    onUpdateMovie(id) {
-        console.log("onUpdateMovie!!", id);
-        // var selectedMovieCopy = this.state.selectedMovie.slice(0);
-        var m = _.find(this.state.movieList, function(movie) {
+    onDeleteMovieFromSearchResult(id) {
+        console.log("real delete from result", id);
+        var collection = this.state.movieList.slice(0);
+        _.remove(collection, function(movie) {
+            return movie.imdbid == id;
+        });
+        var search_result = this.state.movieSearchResult.slice(0);
+        _.remove(search_result, function(movie) {
             return movie.imdbid == id;
         });
         this.setState({
-            openModal: true,
-            selectedMovie: m
+            movieList: collection,
+            movieSearchResult: search_result,
         });
+    }
 
-        console.log("found?", this.state);
+    onUpdateMovie(data) {
+        console.log("onUpdateMovie!!", data.title);
+        var collection = this.state.movieList.slice(0);
+        var foundMovie = false;
+        while(!foundMovie) {
+            var m = _.find(collection, function(movie) {
+                foundMovie = true;
+                return movie.imdbid == data.id;
+            });
+        }
+        //update info
+        m.title = data.title;
+        m.year = data.year;
+        m.rated = data.rated;
+        m.genres = data.genres;
+        m.director = data.director;
+        m.actors = data.actors;
+        m.plot = data.plot;
+        console.log("collection: ", collection);
+
+        this.setState({
+            movieList: collection
+        });
+    }
+
+    onUpdateMovieFromSearchResult(data) {
+        console.log("onUpdateMovie!! from search result", data.title);
+        var collection = this.state.movieList.slice(0);
+        var foundMovie = false;
+        while(!foundMovie) {
+            var m = _.find(collection, function(movie) {
+                foundMovie = true;
+                return movie.imdbid == data.id;
+            });
+        }
+        //update info
+        m.title = data.title;
+        m.year = data.year;
+        m.rated = data.rated;
+        m.genres = data.genres;
+        m.director = data.director;
+        m.actors = data.actors;
+        m.plot = data.plot;
+        console.log("collection: ", collection);
+
+        this.setState({
+            movieList: collection
+        });
     }
 
     render() {
@@ -88,7 +163,6 @@ class App extends React.Component {
         let searchResult = "";
         if(this.state.movieObject && this.state.movieObject != "none") {
             searchResult = <div className="search-result-container">
-                {/*{this.state.movieObject.plot}*/}
                     <Result movieObject={this.state.movieObject} saveMovie={this.onSaveMovie.bind(this)} />
                 </div>;
         }
@@ -102,17 +176,22 @@ class App extends React.Component {
                 Search for a movie and add it to your collection!
             </div>;
         }
-        //modal
-        // let modalWindow = "";
-        // if(this.state.openModal) {
-        //     console.log("open?");
-        //     modalWindow = <div id="modal-window">
-        //         <UpdateModal
-        //             openModal={this.state.openModal}
-        //             selectedMovie={this.state.selectedMovie}
-        //         />
-        //     </div>
-        // }
+        //show whole collection or search result
+        let collectionDiv = "";
+        if(this.state.searchString == "") {
+            collectionDiv = <Collection
+                movieCollection={this.state.movieList}
+                deleteMovie={this.onDeleteMovie.bind(this)}
+                updateMovie={this.onUpdateMovie.bind(this)}
+            />;
+        }
+        else {
+            collectionDiv = <Collection
+                movieCollection={this.state.movieSearchResult}
+                deleteMovie={this.onDeleteMovieFromSearchResult.bind(this)}
+                updateMovie={this.onUpdateMovieFromSearchResult.bind(this)}
+            />;
+        }
 
         return (
             <div className="container">
@@ -134,18 +213,13 @@ class App extends React.Component {
                 </div>
                 <hr />
                 <div>
-                    {/*{modalWindow}*/}
                     <CollectionSearch
-                        movieName={this.state.movieName}
+                        searchString={this.state.searchString}
                         movieCollection={this.state.movieList}
                         searchCollection={this.onSearchCollection.bind(this)}
                         clearSearch={this.onClearSearch.bind(this)}
                     />
-                    <Collection
-                        movieCollection={this.state.movieList}
-                        deleteMovie={this.onDeleteMovie.bind(this)}
-                        updateMovie={this.onUpdateMovie.bind(this)}
-                    />
+                    {collectionDiv}
                 </div>
             </div>
         );

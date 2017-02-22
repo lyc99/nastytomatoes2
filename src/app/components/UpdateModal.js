@@ -6,7 +6,10 @@ export class UpdateModal extends React.Component {
         super();
         this.state = {
             isShowingModal: false,
+            id: props.movieInfo.imdbid,
             title: props.movieInfo.title,
+            year: props.movieInfo.year,
+            genres: props.movieInfo.genres,
             rated: props.movieInfo.rated,
             director: props.movieInfo.director,
             actors: props.movieInfo.actors,
@@ -14,13 +17,19 @@ export class UpdateModal extends React.Component {
         };
     }
     onUpdateMovie() {
-        console.log("onUpdateMovie UpdateModal.js");
-        this.props.updateMovie(this.props.movieId);
+        this.props.updateMovie(this.state);
+        this.setState({isShowingModal: false});
     }
     onHandleChange(event) {
         switch(event.target.id) {
             case "title":
                 this.setState({title: event.target.value});
+                break;
+            case "year":
+                this.setState({year: event.target.value});
+                break;
+            case "genres":
+                this.setState({genres: event.target.value});
                 break;
             case "rated":
                 this.setState({rated: event.target.value});
@@ -30,6 +39,9 @@ export class UpdateModal extends React.Component {
                 break;
             case "actors":
                 this.setState({actors: event.target.value});
+                break;
+            case "plot":
+                this.setState({plot: event.target.value});
                 break;
         }
 
@@ -48,6 +60,12 @@ export class UpdateModal extends React.Component {
                         <h5>Title:</h5>
                         <input className="update-input" id="title" type="text" value={this.state.title}
                                onChange={(event) => this.onHandleChange(event)} />
+                        <h5>Year:</h5>
+                        <input className="update-input" id="year" type="text" value={this.state.year}
+                               onChange={(event) => this.onHandleChange(event)} />
+                        <h5>Genres:</h5>
+                        <input className="update-input" id="genres" type="text" value={this.state.genres}
+                               onChange={(event) => this.onHandleChange(event)} />
                         <h5>Rated:</h5>
                         <input className="update-input" id="rated" type="text" value={this.state.rated}
                                onChange={(event) => this.onHandleChange(event)} />
@@ -58,7 +76,8 @@ export class UpdateModal extends React.Component {
                         <input className="update-input" id="actors" type="text" value={this.state.actors}
                                onChange={(event) => this.onHandleChange(event)} />
                         <h5>Plot:</h5>
-                        <textarea className="plot-text-area">{this.state.plot}</textarea>
+                        <textarea className="plot-text-area" id="plot" value={this.state.plot}
+                                  onChange={(event) => this.onHandleChange(event)} />
                         <button className="btn btn-primary search-button" onClick={this.onUpdateMovie.bind(this)}>Update</button>
                         <button className="btn btn-primary" onClick={this.handleClose}>Close</button>
                     </ModalDialog>
@@ -66,14 +85,4 @@ export class UpdateModal extends React.Component {
             }
         </button>;
     }
-
-    // render() {
-    //     return (
-    //         <div id="modal-window">
-    //             Update Modal
-    //             {this.props.openModal}
-    //             {this.props.selectedMovie.title}
-    //         </div>
-    //     );
-    // }
 }
