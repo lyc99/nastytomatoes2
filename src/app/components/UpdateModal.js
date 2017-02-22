@@ -6,6 +6,7 @@ export class UpdateModal extends React.Component {
         super();
         this.state = {
             isShowingModal: false,
+            movieInfo: props.movieInfo,
             id: props.movieInfo.imdbid,
             title: props.movieInfo.title,
             year: props.movieInfo.year,
@@ -15,6 +16,7 @@ export class UpdateModal extends React.Component {
             actors: props.movieInfo.actors,
             plot: props.movieInfo.plot
         };
+        console.log("modal construct");
     }
     onUpdateMovie() {
         this.props.updateMovie(this.state);
@@ -47,7 +49,17 @@ export class UpdateModal extends React.Component {
 
     }
 
-    handleClick = () => this.setState({isShowingModal: true});
+    handleClick = () => this.setState({
+            isShowingModal: true,
+            id: this.props.movieInfo.imdbid,
+            title: this.props.movieInfo.title,
+            year: this.props.movieInfo.year,
+            genres: this.props.movieInfo.genres,
+            rated: this.props.movieInfo.rated,
+            director: this.props.movieInfo.director,
+            actors: this.props.movieInfo.actors,
+            plot: this.props.movieInfo.plot
+        });
     handleClose = () => this.setState({isShowingModal: false});
 
     render() {

@@ -39,12 +39,12 @@ class App extends React.Component {
     }
 
     onSearchCollection(searchString) {
-        this.setState({searchString: searchString});
+        var result = [];
         var collection = this.state.movieList.slice(0);
         //filter
         _.forEach(collection, function(movie) {
+            var foundString = false;
             for(var key in movie) {
-                var foundString = false;
                 if(key == 'title' || key == 'year' || key == 'rated' || key == 'genres' || key == 'director' || key == 'actors' || key == 'plot') {
                     if(String(movie[key]).indexOf(searchString) > -1) {
                         foundString = true;
@@ -52,16 +52,13 @@ class App extends React.Component {
                     }
                 }
             }
-            if(!foundString) {
-                _.remove(collection, function(m) {
-                    if(movie) {
-                        return m.imdbid == movie.imdbid;
-                    }
-                });
+            if(foundString) {
+                result.push(movie);
             }
         });
         this.setState({
-           movieSearchResult: collection
+            searchString: searchString,
+            movieSearchResult: result,
         });
     }
 
@@ -134,28 +131,29 @@ class App extends React.Component {
     }
 
     onUpdateMovieFromSearchResult(data) {
-        console.log("onUpdateMovie!! from search result", data.title);
-        var collection = this.state.movieList.slice(0);
-        var foundMovie = false;
-        while(!foundMovie) {
-            var m = _.find(collection, function(movie) {
-                foundMovie = true;
-                return movie.imdbid == data.id;
-            });
-        }
-        //update info
-        m.title = data.title;
-        m.year = data.year;
-        m.rated = data.rated;
-        m.genres = data.genres;
-        m.director = data.director;
-        m.actors = data.actors;
-        m.plot = data.plot;
-        console.log("collection: ", collection);
-
-        this.setState({
-            movieList: collection
-        });
+        console.log("onUpdateMovie!! from search result", data);
+        // var collection = this.state.movieSearchResult.slice(0);
+        // var foundMovie = false;
+        // while(!foundMovie) {
+        //     var m = _.find(collection, function(movie) {
+        //         foundMovie = true;
+        //         return movie.imdbid == data.id;
+        //     });
+        // }
+        // //update info from movie list
+        // m.title = data.title;
+        // m.year = data.year;
+        // m.rated = data.rated;
+        // m.genres = data.genres;
+        // m.director = data.director;
+        // m.actors = data.actors;
+        // m.plot = data.plot;
+        // // console.log("collection: ", collection);
+        // this.onUpdateMovie(data);
+        //
+        // this.setState({
+        //     movieList: collection
+        // });
     }
 
     render() {
