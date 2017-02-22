@@ -64,7 +64,6 @@ class App extends React.Component {
 
     onClearSearch() {
         this.setState({searchString: ""});
-        console.log("onClearSearch!!");
     }
 
     onSaveMovie(movie) {
@@ -79,7 +78,6 @@ class App extends React.Component {
     }
 
     onDeleteMovie(id) {
-        console.log("real delete", id);
         var collection = this.state.movieList.slice(0);
         _.remove(collection, function(movie) {
             return movie.imdbid == id;
@@ -90,7 +88,6 @@ class App extends React.Component {
     }
 
     onDeleteMovieFromSearchResult(id) {
-        console.log("real delete from result", id);
         var collection = this.state.movieList.slice(0);
         _.remove(collection, function(movie) {
             return movie.imdbid == id;
@@ -106,7 +103,6 @@ class App extends React.Component {
     }
 
     onUpdateMovie(data) {
-        console.log("onUpdateMovie!!", data.title);
         var collection = this.state.movieList.slice(0);
         var foundMovie = false;
         while(!foundMovie) {
@@ -123,37 +119,10 @@ class App extends React.Component {
         m.director = data.director;
         m.actors = data.actors;
         m.plot = data.plot;
-        console.log("collection: ", collection);
 
         this.setState({
             movieList: collection
         });
-    }
-
-    onUpdateMovieFromSearchResult(data) {
-        console.log("onUpdateMovie!! from search result", data);
-        // var collection = this.state.movieSearchResult.slice(0);
-        // var foundMovie = false;
-        // while(!foundMovie) {
-        //     var m = _.find(collection, function(movie) {
-        //         foundMovie = true;
-        //         return movie.imdbid == data.id;
-        //     });
-        // }
-        // //update info from movie list
-        // m.title = data.title;
-        // m.year = data.year;
-        // m.rated = data.rated;
-        // m.genres = data.genres;
-        // m.director = data.director;
-        // m.actors = data.actors;
-        // m.plot = data.plot;
-        // // console.log("collection: ", collection);
-        // this.onUpdateMovie(data);
-        //
-        // this.setState({
-        //     movieList: collection
-        // });
     }
 
     render() {
@@ -187,7 +156,7 @@ class App extends React.Component {
             collectionDiv = <Collection
                 movieCollection={this.state.movieSearchResult}
                 deleteMovie={this.onDeleteMovieFromSearchResult.bind(this)}
-                updateMovie={this.onUpdateMovieFromSearchResult.bind(this)}
+                updateMovie={this.onUpdateMovie.bind(this)}
             />;
         }
 

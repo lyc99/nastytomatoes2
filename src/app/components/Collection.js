@@ -2,19 +2,10 @@ import React from "react";
 import { UpdateModal } from "./UpdateModal";
 
 export class Collection extends React.Component {
-    // constructor(props) {
-    //     super();
-    //     this.state = {
-    //        movieCollection: props.movieCollection,
-    //     };
-    //     console.log("construct collection");
-    // }
     onDeleteMovie(event) {
-        console.log("onDelete?", event.target.id);
         this.props.deleteMovie(event.target.id);
     }
     onUpdateMovie(data) {
-        console.log("press update", data.target);
         this.props.updateMovie(data);
     }
 
@@ -35,7 +26,6 @@ export class Collection extends React.Component {
                             <p>Actors: {movie.actors}</p>
                             <p>{movie.plot}</p>
                             <button onClick={(event) => this.onDeleteMovie(event)} className="btn btn-primary search-button" id={movie.imdbid}>Delete</button>
-                            {/*<button onClick={this.onUpdateMovie.bind(this)} className="btn btn-primary" id={movie.title}>Update</button>*/}
                             <UpdateModal
                                 updateMovie={this.onUpdateMovie.bind(this)}
                                 movieInfo={movie}

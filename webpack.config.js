@@ -12,15 +12,10 @@ var config = {
         publicPath: "/app/"
     },
     node: {
-        // console: "empty",
         fs: "empty",
         net: "empty",
         tls: "empty"
     },
-    // target: "node",
-    // browser: {
-    //     fs: false
-    // },
     module: {
         loaders: [
             {

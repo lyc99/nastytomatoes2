@@ -11,7 +11,6 @@ export class CollectionSearch extends React.Component {
         this.setState({
             searchString: event.target.value
         });
-        // console.log("handle", this.state.searchString);
     }
     onSearchCollection() {
         console.log("onSearch", this.state.searchString);

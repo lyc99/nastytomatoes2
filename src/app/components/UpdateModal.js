@@ -16,7 +16,6 @@ export class UpdateModal extends React.Component {
             actors: props.movieInfo.actors,
             plot: props.movieInfo.plot
         };
-        console.log("modal construct");
     }
     onUpdateMovie() {
         this.props.updateMovie(this.state);

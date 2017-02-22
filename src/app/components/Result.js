@@ -1,13 +1,6 @@
 import React from "react";
 
 export class Result extends React.Component {
-    constructor(props) {
-        super();
-        this.state = {
-
-        };
-    }
-
     onSaveMovie() {
         this.props.saveMovie(this.props.movieObject);
     }
@@ -15,7 +8,6 @@ export class Result extends React.Component {
     render() {
         return (
             <div className="search-result">
-                {/*{this.props.movieObject.plot}*/}
                 <img className="poster" src={this.props.movieObject.poster} />
                 <div className="search-result-desc">
                     <div className="desc">Title: {this.props.movieObject.title}</div>
