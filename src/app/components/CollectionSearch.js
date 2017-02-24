@@ -1,4 +1,5 @@
 import React from "react";
+import * as MovieActions from "../actions/MovieActions";
 
 export class CollectionSearch extends React.Component {
     constructor(props) {
@@ -13,13 +14,10 @@ export class CollectionSearch extends React.Component {
         });
     }
     onSearchCollection() {
-        this.props.searchCollection(this.state.searchString);
+        MovieActions.searchCollection(this.state.searchString);
     }
     onClearSearch() {
-        this.setState({
-            searchString: ""
-        });
-        this.props.clearSearch(this.state.searchString);
+        MovieActions.clearSearch();
     }
 
     render() {

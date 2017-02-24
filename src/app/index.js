@@ -1,6 +1,14 @@
 import React from "react";
 import { render } from "react-dom";
 
+import { Router, Route, IndexRoute, hashHistory } from "react-router";
+
+import { Games } from "./pages/Games";
+import { Tv } from "./pages/Tv";
+
+import MovieListStore from "./stores/MovieListStore";
+
+import { Header } from "./components/Header";
 import { Search } from "./components/Search";
 import { Result } from "./components/Result";
 import { Collection } from "./components/Collection";
@@ -13,12 +21,24 @@ class App extends React.Component {
     constructor() {
         super();
         this.state = {
+            homeLink: "Home",
+            tvLink: "TV",
             movieObject: null,
             movieName: "",
             movieList: [],
             movieSearchResult: [],
             searchString: "",
         };
+    }
+
+    componentWillMount() {
+        MovieListStore.on("change", () => {
+           this.setState({
+               movieList: MovieListStore.getAll(),
+               movieSearchResult: MovieListStore.getMovieSearchResult(),
+               searchString: MovieListStore.getSearchString(),
+           });
+        });
     }
 
     onSearchMovieName(newName) {
@@ -38,68 +58,8 @@ class App extends React.Component {
         });
     }
 
-    onSearchCollection(searchString) {
-        var result = [];
-        var collection = this.state.movieList.slice(0);
-        //filter
-        _.forEach(collection, function(movie) {
-            var foundString = false;
-            for(var key in movie) {
-                if(key == 'title' || key == 'year' || key == 'rated' || key == 'genres' || key == 'director' || key == 'actors' || key == 'plot') {
-                    if(String(movie[key]).indexOf(searchString) > -1) {
-                        foundString = true;
-                        break;
-                    }
-                }
-            }
-            if(foundString) {
-                result.push(movie);
-            }
-        });
-        this.setState({
-            searchString: searchString,
-            movieSearchResult: result,
-        });
-    }
-
     onClearSearch() {
         this.setState({searchString: ""});
-    }
-
-    onSaveMovie(movie) {
-        var collection = this.state.movieList.slice(0);
-        if(!_.find(collection, function(m) {return m.imdbid == movie.imdbid;})) {
-            collection.push(movie);
-        }
-        this.setState({
-            movieList: collection,
-            searchString: "",
-        });
-    }
-
-    onDeleteMovie(id) {
-        var collection = this.state.movieList.slice(0);
-        _.remove(collection, function(movie) {
-            return movie.imdbid == id;
-        });
-        this.setState({
-           movieList: collection
-        });
-    }
-
-    onDeleteMovieFromSearchResult(id) {
-        var collection = this.state.movieList.slice(0);
-        _.remove(collection, function(movie) {
-            return movie.imdbid == id;
-        });
-        var search_result = this.state.movieSearchResult.slice(0);
-        _.remove(search_result, function(movie) {
-            return movie.imdbid == id;
-        });
-        this.setState({
-            movieList: collection,
-            movieSearchResult: search_result,
-        });
     }
 
     onUpdateMovie(data) {
@@ -130,7 +90,8 @@ class App extends React.Component {
         let searchResult = "";
         if(this.state.movieObject && this.state.movieObject != "none") {
             searchResult = <div className="search-result-container">
-                    <Result movieObject={this.state.movieObject} saveMovie={this.onSaveMovie.bind(this)} />
+                    <Result movieObject={this.state.movieObject} />
+                    {/*<Result movieObject={this.state.movieObject} saveMovie={this.onSaveMovie.bind(this)} />*/}
                 </div>;
         }
         else if(this.state.movieObject == "none") {
@@ -148,20 +109,26 @@ class App extends React.Component {
         if(this.state.searchString == "") {
             collectionDiv = <Collection
                 movieCollection={this.state.movieList}
-                deleteMovie={this.onDeleteMovie.bind(this)}
+
                 updateMovie={this.onUpdateMovie.bind(this)}
             />;
         }
         else {
             collectionDiv = <Collection
                 movieCollection={this.state.movieSearchResult}
-                deleteMovie={this.onDeleteMovieFromSearchResult.bind(this)}
+
                 updateMovie={this.onUpdateMovie.bind(this)}
             />;
         }
 
         return (
             <div className="container">
+                <div className="row">
+                    <div className="col-xs-10 col-xs-offset-1">
+                        <Header homeLink={this.state.homeLink} tvLink={this.state.tvLink} />
+                        {this.props.children}
+                    </div>
+                </div>
                 <div className="row text-center">
                     <div className="col-xs-10 col-xs-offset-1 title-text">
                         Nasty Tomatoes 2.0
@@ -183,7 +150,7 @@ class App extends React.Component {
                     <CollectionSearch
                         searchString={this.state.searchString}
                         movieCollection={this.state.movieList}
-                        searchCollection={this.onSearchCollection.bind(this)}
+
                         clearSearch={this.onClearSearch.bind(this)}
                     />
                     {collectionDiv}
@@ -193,4 +160,13 @@ class App extends React.Component {
     }
 }
 
-render(<App/>, window.document.getElementById("app"));
+render(
+    // <App/>,
+    <Router history={hashHistory}>
+        <Route path="/" component={App}>
+            {/*<IndexRoute component={Header}></IndexRoute>*/}
+            <Route path="tv" component={Tv}></Route>
+            <Route path="games" component={Games}></Route>
+        </Route>
+    </Router>,
+    window.document.getElementById("app"));

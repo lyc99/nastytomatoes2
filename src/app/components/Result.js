@@ -1,8 +1,11 @@
 import React from "react";
 
+import * as MovieActions from "../actions/MovieActions";
+
+
 export class Result extends React.Component {
     onSaveMovie() {
-        this.props.saveMovie(this.props.movieObject);
+        MovieActions.addMovie(this.props.movieObject);
     }
 
     render() {

@@ -1,9 +1,11 @@
 import React from "react";
 import { UpdateModal } from "./UpdateModal";
 
+import * as MovieActions from "../actions/MovieActions";
+
 export class Collection extends React.Component {
     onDeleteMovie(event) {
-        this.props.deleteMovie(event.target.id);
+        MovieActions.deleteMovie(event.target.id);
     }
     onUpdateMovie(data) {
         this.props.updateMovie(data);
