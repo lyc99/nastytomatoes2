@@ -8,7 +8,7 @@ export class Collection extends React.Component {
         MovieActions.deleteMovie(event.target.id);
     }
     onUpdateMovie(data) {
-        this.props.updateMovie(data);
+        MovieActions.updateMovie(data);
     }
 
     render() {

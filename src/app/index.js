@@ -14,7 +14,6 @@ import { Result } from "./components/Result";
 import { Collection } from "./components/Collection";
 import { CollectionSearch } from "./components/CollectionSearch";
 
-const imdb = require('imdb-api');
 var _ = require('lodash');
 
 class App extends React.Component {
@@ -33,56 +32,19 @@ class App extends React.Component {
 
     componentWillMount() {
         MovieListStore.on("change", () => {
+            console.log("change??");
            this.setState({
                movieList: MovieListStore.getAll(),
                movieSearchResult: MovieListStore.getMovieSearchResult(),
                searchString: MovieListStore.getSearchString(),
+               movieObject: MovieListStore.getMovieObject(),
+               movieName: MovieListStore.getMovieName(),
            });
-        });
-    }
-
-    onSearchMovieName(newName) {
-        let movie = null;
-        imdb.get(newName).then(things => {
-            movie = things;
-
-            this.setState({
-                movieObject: movie,
-                movieName: movie.title
-            });
-        }, err => {
-            console.log("err", err);
-            this.setState({
-                movieObject: "none"
-            });
         });
     }
 
     onClearSearch() {
         this.setState({searchString: ""});
-    }
-
-    onUpdateMovie(data) {
-        var collection = this.state.movieList.slice(0);
-        var foundMovie = false;
-        while(!foundMovie) {
-            var m = _.find(collection, function(movie) {
-                foundMovie = true;
-                return movie.imdbid == data.id;
-            });
-        }
-        //update info
-        m.title = data.title;
-        m.year = data.year;
-        m.rated = data.rated;
-        m.genres = data.genres;
-        m.director = data.director;
-        m.actors = data.actors;
-        m.plot = data.plot;
-
-        this.setState({
-            movieList: collection
-        });
     }
 
     render() {
@@ -109,15 +71,11 @@ class App extends React.Component {
         if(this.state.searchString == "") {
             collectionDiv = <Collection
                 movieCollection={this.state.movieList}
-
-                updateMovie={this.onUpdateMovie.bind(this)}
             />;
         }
         else {
             collectionDiv = <Collection
                 movieCollection={this.state.movieSearchResult}
-
-                updateMovie={this.onUpdateMovie.bind(this)}
             />;
         }
 
@@ -139,7 +97,6 @@ class App extends React.Component {
                         <div className="search-box-container">
                             <Search
                                 movieName={this.state.movieName}
-                                searchMovieName={this.onSearchMovieName.bind(this)}
                             />
                             {searchResult}
                         </div>

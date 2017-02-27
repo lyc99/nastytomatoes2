@@ -11,7 +11,7 @@ export class Search extends React.Component {
     }
 
     onSearchMovieName() {
-        this.props.searchMovieName(this.state.movieName);
+        MovieActions.searchMovie(this.state.movieName);
     }
 
     onHandleChange(event) {
